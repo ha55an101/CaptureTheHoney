@@ -24,7 +24,9 @@ class CaptureHoney:
         #Variables for timer 
         self.timer = pygame.time.Clock()
         self.frameRate = 60
-        self.frameCount = 0 
+        self.frameCount = 0
+        #use for pausing game 
+        self.paused = 0 
 
         #Initialize game level 
         self.level = 1
@@ -74,7 +76,10 @@ class CaptureHoney:
                     
         #Rendering hornet and hive sprite 
         self.hornetSprite = pygame.sprite.RenderPlain((self.hornet))
-        self.hiveSprite = pygame.sprite.RenderPlain((self.hive))  
+        self.hiveSprite = pygame.sprite.RenderPlain((self.hive))
+
+    
+        
         
         
 
@@ -103,7 +108,11 @@ class CaptureHoney:
                     or event.key == K_DOWN):
 
                         self.hornet.keyDown(event.key)
-                        self.sound.play(-1)
+                        #Only play sound when player hasn't finished level or hasn't been hit 
+                        if self.paused == 0 and self.hornet.getLevel() == 0 and self.hornet.hit == 0:
+                            self.sound.play(-1)
+                      
+                    
                         
                     
                 #Handles event when player lets go of key 
@@ -114,7 +123,14 @@ class CaptureHoney:
                     or event.key == K_DOWN):
 
                         self.hornet.keyUp(event.key)
-                        self.sound.stop() 
+                        self.sound.stop()
+                    #Pauses game only if level/game not completed or player is still alive 
+                    elif event.key == K_p:
+                        if self.hornet.getLevel() == 0 and self.hornet.hit == 0:
+                            if self.paused == 0:
+                                self.paused = 1
+                            elif self.paused == 1: self.paused = 0 
+                   
                          
 
             #Calculating time for timer and formatting  
@@ -122,8 +138,16 @@ class CaptureHoney:
             minutes = totalSeconds // 60
             seconds = totalSeconds % 60
             time = "TIME:  {0:02}:{1:02}".format(minutes, seconds)
-            #Run game while player is alive and level not complete 
-            if self.hornet.hit == 0 and self.hornet.getLevel() == 0:
+            #Show text when game is paused  
+            if self.paused == True: 
+                pausedText = self.font.render("Paused", True, (250,250,250)) 
+                pause_rect = pausedText.get_rect()
+                pause_x1 = self.screen.get_width() / 2 - pause_rect.width / 2
+                pause_y1 = self.screen.get_height() / 2 - pause_rect.height / 2
+                self.screen.blit(pausedText, [pause_x1, pause_y1])
+
+            #Run game while player is alive and level not complete
+            if self.hornet.hit == 0 and self.hornet.getLevel() == 0 and self.paused == 0 :
                 self.beeSprites.update(self.treeSprites, self.hive)
                 
                 self.hornetSprite.update(self.treeSprites,self.beeSprites, self.hive)
@@ -144,6 +168,8 @@ class CaptureHoney:
 
                 self.hornetSprite.draw(self.screen)
                 self.beeSprites.draw(self.screen)
+                
+            
                 
                 self.hiveSprite.draw(self.screen)
             #If player reaches last level, show text, reset timer and restart game when player clicks mouse 
