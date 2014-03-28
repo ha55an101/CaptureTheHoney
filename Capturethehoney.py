@@ -154,11 +154,11 @@ class CaptureHoney:
                 
 
                 self.screen.blit(self.background, (0,0))
+
                 #Shows current level number at the top of window 
-                if pygame.font:
-                    levelText = self.font.render('LEVEL: {0}'.format(self.level), True, (250, 250, 250))
-                    levelTextX = levelText.get_rect(centerx = self.background.get_width() / 2)
-                    self.screen.blit(levelText, levelTextX)
+                levelText = self.font.render('LEVEL: {0}'.format(self.level), True, (250, 250, 250))
+                levelTextX = levelText.get_rect(centerx = self.background.get_width() / 2)
+                self.screen.blit(levelText, levelTextX)
 
                 #Updating timer and displaying 
                 timeOutput = self.font.render(time, True, (250,250,250))
