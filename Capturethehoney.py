@@ -139,7 +139,7 @@ class CaptureHoney:
             seconds = totalSeconds % 60
             time = "TIME:  {0:02}:{1:02}".format(minutes, seconds)
             #Show text when game is paused  
-            if self.paused == True: 
+            if self.paused == 1: 
                 pausedText = self.font.render("Paused", True, (250,250,250)) 
                 pause_rect = pausedText.get_rect()
                 pause_x1 = self.screen.get_width() / 2 - pause_rect.width / 2
