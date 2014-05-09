@@ -84,6 +84,7 @@ class CaptureHoney:
         
 
     def main(self):
+        #Call Menu loop 
         self.menu.menuLoop() 
 
         self.loadSprites(self.level)
